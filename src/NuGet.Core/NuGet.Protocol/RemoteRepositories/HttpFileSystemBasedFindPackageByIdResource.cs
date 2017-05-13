@@ -34,11 +34,20 @@ namespace NuGet.Protocol
             new ConcurrentDictionary<string, AsyncLazy<SortedDictionary<NuGetVersion, PackageInfo>>>(StringComparer.OrdinalIgnoreCase);
         private readonly IReadOnlyList<Uri> _baseUris;
         private readonly FindPackagesByIdNupkgDownloader _nupkgDownloader;
+        private readonly IdListResource _idListResource;
+        private readonly SourceRepository _sourceRepository;
 
         public HttpFileSystemBasedFindPackageByIdResource(
+            SourceRepository sourceRepository,
             IReadOnlyList<Uri> baseUris,
-            HttpSource httpSource)
+            HttpSource httpSource,
+            IdListResource idListResource)
         {
+            if (sourceRepository == null)
+            {
+                throw new ArgumentNullException(nameof(sourceRepository));
+            }
+
             if (baseUris == null)
             {
                 throw new ArgumentNullException(nameof(baseUris));
@@ -49,6 +58,7 @@ namespace NuGet.Protocol
                 throw new ArgumentException(Strings.OneOrMoreUrisMustBeSpecified, nameof(baseUris));
             }
 
+            _sourceRepository = sourceRepository;
             _baseUris = baseUris
                 .Take(MaxRetries)
                 .Select(uri => uri.OriginalString.EndsWith("/", StringComparison.Ordinal) ? uri : new Uri(uri.OriginalString + "/"))
@@ -56,6 +66,7 @@ namespace NuGet.Protocol
 
             _httpSource = httpSource;
             _nupkgDownloader = new FindPackagesByIdNupkgDownloader(httpSource);
+            _idListResource = idListResource;
         }
 
         public override async Task<IEnumerable<NuGetVersion>> GetAllVersionsAsync(
@@ -64,6 +75,16 @@ namespace NuGet.Protocol
             ILogger logger,
             CancellationToken cancellationToken)
         {
+            // If possible, check the ID list first. If the package ID isn't in the list, then don't bother
+            // checking the other resources.
+            if (_idListResource != null && !(await _idListResource.HasIdAsync(id, cancellationToken)))
+            {
+                logger.LogVerbose(
+                    $"Package '{id}' is not available on {_sourceRepository.PackageSource}, therefore flat container " +
+                    $"will not be queried.");
+                return Enumerable.Empty<NuGetVersion>();
+            }
+
             var packageInfos = await EnsurePackagesAsync(id, cacheContext, logger, cancellationToken);
             return packageInfos.Keys;
         }

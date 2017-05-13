@@ -58,6 +58,7 @@ namespace NuGet.Protocol
             yield return new Lazy<INuGetResourceProvider>(() => new PackageMetadataResourceV3Provider());
             yield return new Lazy<INuGetResourceProvider>(() => new AutoCompleteResourceV2FeedProvider());
             yield return new Lazy<INuGetResourceProvider>(() => new AutoCompleteResourceV3Provider());
+            yield return new Lazy<INuGetResourceProvider>(() => new IdListResourceV3Provider());
 
             // Local repository providers
             yield return new Lazy<INuGetResourceProvider>(() => new FindLocalPackagesResourceUnzippedProvider());

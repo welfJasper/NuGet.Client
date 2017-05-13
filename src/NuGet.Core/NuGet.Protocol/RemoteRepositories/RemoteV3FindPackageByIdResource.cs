@@ -8,7 +8,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using NuGet.Common;
-using NuGet.Packaging.Core;
 using NuGet.Protocol.Core.Types;
 using NuGet.Versioning;
 
@@ -25,12 +24,17 @@ namespace NuGet.Protocol
         private readonly FindPackagesByIdNupkgDownloader _nupkgDownloader;
 
         private DependencyInfoResource _dependencyInfoResource;
+        private readonly IdListResource _idListResource;
 
-        public RemoteV3FindPackageByIdResource(SourceRepository sourceRepository, HttpSource httpSource)
+        public RemoteV3FindPackageByIdResource(
+            SourceRepository sourceRepository,
+            HttpSource httpSource,
+            IdListResource idListResource)
         {
             SourceRepository = sourceRepository;
             _httpSource = httpSource;
             _nupkgDownloader = new FindPackagesByIdNupkgDownloader(httpSource);
+            _idListResource = idListResource;
         }
 
         public SourceRepository SourceRepository { get; }
@@ -41,6 +45,16 @@ namespace NuGet.Protocol
             ILogger logger,
             CancellationToken cancellationToken)
         {
+            // If possible, check the ID list first. If the package ID isn't in the list, then don't bother
+            // checking the other resources.
+            if (_idListResource != null && !(await _idListResource.HasIdAsync(id, cancellationToken)))
+            {
+                logger.LogVerbose(
+                    $"Package '{id}' is not available on {SourceRepository.PackageSource}, therefore registrations " +
+                    $"will not be queried.");
+                return Enumerable.Empty<NuGetVersion>();
+            }
+
             var result = await EnsurePackagesAsync(id, cacheContext, logger, cancellationToken);
             return result.Select(item => item.Identity.Version);
         }

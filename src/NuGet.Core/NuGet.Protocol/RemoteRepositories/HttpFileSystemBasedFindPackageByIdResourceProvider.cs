@@ -27,10 +27,13 @@ namespace NuGet.Protocol
                 && packageBaseAddress.Count > 0)
             {
                 var httpSourceResource = await sourceRepository.GetResourceAsync<HttpSourceResource>(token);
+                var idListResource = await sourceRepository.GetResourceAsync<IdListResource>(token);
 
                 resource = new HttpFileSystemBasedFindPackageByIdResource(
+                    sourceRepository,
                     packageBaseAddress,
-                    httpSourceResource.HttpSource);
+                    httpSourceResource.HttpSource,
+                    idListResource);
             }
 
             return Tuple.Create(resource != null, resource);

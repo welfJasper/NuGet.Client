@@ -26,10 +26,12 @@ namespace NuGet.Protocol
             if (serviceIndexResource != null)
             {
                 var httpSourceResource = await sourceRepository.GetResourceAsync<HttpSourceResource>(token);
+                var idListResource = await sourceRepository.GetResourceAsync<IdListResource>(token);
 
                 resource = new RemoteV3FindPackageByIdResource(
                     sourceRepository,
-                    httpSourceResource.HttpSource);
+                    httpSourceResource.HttpSource,
+                    idListResource);
             }
 
             return Tuple.Create(resource != null, resource);
