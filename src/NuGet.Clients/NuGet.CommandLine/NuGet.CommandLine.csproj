@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="Microsoft.NET.Sdk">
+<Project>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), 'README.md'))\build\common.props" />
   <Import Project="ilmerge.props" />
 
@@ -88,7 +88,7 @@
     <MakeDir Directories="$(ArtifactsDirectory)$(VsixOutputDirName)" />
     <Exec Command="$(IlmergeCommand)" ContinueOnError="false" />
   </Target>
-  
+
   <PropertyGroup>
     <NuspecFile>NuGet.CommandLine.nuspec</NuspecFile>
     <NuspecProperties>version=$(Version);configuration=$(Configuration)</NuspecProperties>
@@ -96,14 +96,14 @@
   </PropertyGroup>
 
   <Import Project="$(BuildCommonDirectory)common.targets" />
-  
+
   <Target Name="GetSigningInputs" Returns="@(DllsToSign)">
-  <ItemGroup>
-    <DllsToSign Include="$(ArtifactsDirectory)$(VsixOutputDirName)\NuGet.exe">
-      <StrongName>MsSharedLib72</StrongName>
-      <Authenticode>Microsoft</Authenticode>
-    </DllsToSign>
-  </ItemGroup>
+    <ItemGroup>
+      <DllsToSign Include="$(ArtifactsDirectory)$(VsixOutputDirName)\NuGet.exe">
+        <StrongName>MsSharedLib72</StrongName>
+        <Authenticode>Microsoft400</Authenticode>
+      </DllsToSign>
+    </ItemGroup>
   </Target>
 
   <Target Name="GetSymbolsToIndex" Returns="@(SymbolsToIndex)">

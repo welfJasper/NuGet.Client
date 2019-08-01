@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), 'README.md'))\build\common.props" />
 
   <PropertyGroup>
@@ -37,7 +37,7 @@
     <PackageReference Include="Microsoft.Build.Tasks.Core" Version="$(MicrosoftBuildPackageVersion)" />
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="$(MicrosoftBuildPackageVersion)" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <Compile Update="Strings.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -45,7 +45,7 @@
       <DependentUpon>Strings.resx</DependentUpon>
     </Compile>
   </ItemGroup>
-  
+
   <ItemGroup>
     <EmbeddedResource Update="Strings.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -99,24 +99,27 @@
   </Target>
 
   <Import Project="$(BuildCommonDirectory)common.targets" />
-  
+
   <PropertyGroup>
     <SignTargetsForRealSigning>GetIlmergeBuildOutput</SignTargetsForRealSigning>
     <SymbolTargetsToGetPdbs>GetIlmergeSymbolOutput</SymbolTargetsToGetPdbs>
   </PropertyGroup>
-  
+
   <!--These targets help get all the DLLs that are packed in the nuspec to be sent for signing.-->
   <Target Name="GetIlmergeBuildOutput" DependsOnTargets="ILMergeNuGetPackResourcesPerCulture;_GetDllsInOutputDirectory" Returns="@(DllsToSign)">
     <ItemGroup>
       <DllsToSign Include="@(DllsInOutputDir)" KeepDuplicates="false" />
     </ItemGroup>
   </Target>
-  
+
   <Target Name="_GetDllsInOutputDirectory" Returns="@(DllsInOutputDir)">
     <ItemGroup>
       <DllsInOutputDir Include="$(OutputPath)ilmerge\*.dll" KeepDuplicates="false">
         <StrongName>MsSharedLib72</StrongName>
-        <Authenticode>Microsoft</Authenticode>
+        <Authenticode>Microsoft400</Authenticode>
+      </DllsInOutputDir>
+      <DllsInOutputDir Include="$(OutputPath)ilmerge\*.xml" KeepDuplicates="false">
+        <Authenticode>MicrosoftXmlSHA2</Authenticode>
       </DllsInOutputDir>
     </ItemGroup>
   </Target>
@@ -127,7 +130,7 @@
       <SymbolsToIndex Include="$(OutputPath)ilmerge\*.pdb" KeepDuplicates="false" />
     </ItemGroup>
   </Target>
-  
+
   <PropertyGroup>
     <NuspecFile>NuGet.Build.Tasks.Pack.nuspec</NuspecFile>
     <NuspecProperties>version=$(Version);configuration=$(Configuration)</NuspecProperties>
