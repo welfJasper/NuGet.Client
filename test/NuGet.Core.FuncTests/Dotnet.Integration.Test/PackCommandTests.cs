@@ -185,7 +185,7 @@ namespace Dotnet.Integration.Test
                 }
 
                 msbuildFixture.RestoreProject(workingDirectory, projectName, string.Empty);
-                var args = includeSymbols ? $"-o {workingDirectory} --include-symbols" : $"-o {workingDirectory}";
+                var args = includeSymbols ? $"--include-symbols" : string.Empty;
                 msbuildFixture.PackProject(workingDirectory, projectName, args, null);
 
                 var nupkgExtension = includeSymbols ? ".symbols.nupkg" : ".nupkg";
@@ -4379,7 +4379,6 @@ namespace ClassLibrary
             projectBuilder
                 .WithProjectName("test")
                 .WithProperty("Authors", "Alice")
-                .WithProperty("PackageOutputPath", "bin\\Debug\\")
                 .WithProperty("NuspecFile", "test.nuspec")
                 .WithPackageIconUrl("https://test/icon.jpg");
 

@@ -481,22 +481,23 @@ namespace NuGet.CommandLine.Test
         /// </summary>
         public static string GetNuGetExePath()
         {
-            return _nuGetExePath.Value;
-        }
-
-        private static readonly Lazy<string> _nuGetExePath = new Lazy<string>(GetNuGetExePathCore);
-
-        private static string GetNuGetExePathCore()
-        {
             var targetDir = ConfigurationManager.AppSettings["TestTargetDir"] ?? Directory.GetCurrentDirectory();
-            var nugetexe = Path.Combine(targetDir, "NuGet", "NuGet.exe");
+            var fileName = "NuGet.exe";
+            var nugetexe = Path.Combine(targetDir, "NuGet", fileName);
+            // Revert to parent dir if not found under layout dir.
+            if (!File.Exists(nugetexe)) nugetexe = Path.Combine(targetDir, fileName);
+            if (!File.Exists(nugetexe)) throw new FileNotFoundException($"The NuGet executable is not present in '{targetDir}'", fileName);
             return nugetexe;
         }
 
         public static string GetTestablePluginPath()
         {
             var targetDir = ConfigurationManager.AppSettings["TestTargetDir"] ?? Directory.GetCurrentDirectory();
-            var plugin = Path.Combine(targetDir, "TestableCredentialProvider", "CredentialProvider.Testable.exe");
+            var fileName = "CredentialProvider.Testable.exe";
+            var plugin = Path.Combine(targetDir, "TestableCredentialProvider", fileName);
+            // Revert to parent dir if not found under layout dir.
+            if (!File.Exists(plugin)) plugin = Path.Combine(targetDir, fileName);
+            if (!File.Exists(plugin)) throw new FileNotFoundException($"The CredentialProvider executable is not present in '{targetDir}'", fileName);
             return plugin;
         }
 
