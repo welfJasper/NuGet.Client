@@ -660,6 +660,7 @@ namespace NuGet.Build.Tasks.Pack.Test
                         { "FullPath", fullPath }
                     }),
                     BuildOutputFolders = new string[] { "lib" },
+                    PackageOutputPath = "bin",
                     NuspecOutputPath = "obj",
                     IncludeBuildOutput = true,
                     RestoreOutputPath = Path.Combine(testDir, "obj"),
@@ -696,6 +697,7 @@ namespace NuGet.Build.Tasks.Pack.Test
                 {
                     return Path.Combine(
                         TestDir,
+                        Request.PackageOutputPath,
                         $"{Request.PackageId}.{Request.PackageVersion}.nupkg");
                 }
             }

@@ -1,0 +1,2 @@
+NuGet.Commands.MSBuildPackTargetArgs.PackageOutputPath.get -> string
+NuGet.Commands.MSBuildPackTargetArgs.PackageOutputPath.set -> void

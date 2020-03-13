@@ -58,6 +58,7 @@ namespace NuGet.Build.Tasks.Pack
 
             InitCurrentDirectoryAndFileName(request, packArgs);
             InitNuspecOutputPath(request, packArgs);
+            InitPackageOutputPath(request, packArgs);
             PackCommandRunner.SetupCurrentDirectory(packArgs);
 
             if (!string.IsNullOrEmpty(request.NuspecFile))
@@ -515,6 +516,20 @@ namespace NuGet.Build.Tasks.Pack
                 packArgs.PackTargetArgs.NuspecOutputPath = Path.Combine(
                     packArgs.CurrentDirectory,
                     request.NuspecOutputPath);
+            }
+        }
+
+        private void InitPackageOutputPath(IPackTaskRequest<IMSBuildItem> request, PackArgs packArgs)
+        {
+            if (Path.IsPathRooted(request.PackageOutputPath))
+            {
+                packArgs.PackTargetArgs.PackageOutputPath = request.PackageOutputPath;
+            }
+            else
+            {
+                packArgs.PackTargetArgs.PackageOutputPath = Path.Combine(
+                    packArgs.CurrentDirectory,
+                    request.PackageOutputPath);
             }
         }
 
