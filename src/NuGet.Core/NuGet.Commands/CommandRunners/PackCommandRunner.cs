@@ -656,7 +656,7 @@ namespace NuGet.Commands
             if (_packArgs.InstallPackageToOutputPath)
             {
                 string outputPath = GetOutputPath(packageBuilder, _packArgs);
-                packageArchiveReader = BuildPackage(packageBuilder, outputPath: outputPath, symbolsPackage: false);
+                packageArchiveReader = BuildPackage(packageBuilder, outputPath, symbolsPackage: false);
             }
             else
             {
@@ -782,7 +782,7 @@ namespace NuGet.Commands
                 if (_packArgs.InstallPackageToOutputPath)
                 {
                     string outputPath = GetOutputPath(mainPackageBuilder, _packArgs);
-                    packageArchiveReader = BuildPackage(mainPackageBuilder, outputPath: outputPath, symbolsPackage: false);
+                    packageArchiveReader = BuildPackage(mainPackageBuilder, outputPath, symbolsPackage: false);
                 }
                 else
                 {

@@ -153,7 +153,12 @@ namespace NuGet.Commands
         /// <summary>
         /// MSBuildProjectExtensionsPath
         /// </summary>
-        public string MSBuildProjectExtensionsPath { get; set; }
+        [Obsolete("Use RestoreOutputPath instead", true)]
+        public string MSBuildProjectExtensionsPath
+        {
+            get => RestoreOutputPath;
+            set => RestoreOutputPath = value;
+        }
 
         /// <summary>
         /// Compatibility options

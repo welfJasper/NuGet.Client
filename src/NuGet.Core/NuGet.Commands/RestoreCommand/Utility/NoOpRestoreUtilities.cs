@@ -39,7 +39,7 @@ namespace NuGet.Commands
                 || request.ProjectStyle == ProjectStyle.PackageReference
                 || request.ProjectStyle == ProjectStyle.Standalone)
             {
-                var cacheRoot = request.MSBuildProjectExtensionsPath ?? request.RestoreOutputPath;
+                var cacheRoot = request.RestoreOutputPath;
                 return request.Project.RestoreMetadata.CacheFilePath = GetProjectCacheFilePath(cacheRoot);
             }
 
@@ -237,7 +237,7 @@ namespace NuGet.Commands
                 || request.ProjectStyle == ProjectStyle.PackageReference
                 || request.ProjectStyle == ProjectStyle.Standalone)
             {
-                var outputRoot = request.MSBuildProjectExtensionsPath ?? request.RestoreOutputPath;
+                var outputRoot = request.RestoreOutputPath;
                 var projFileName = Path.GetFileName(request.Project.RestoreMetadata.ProjectPath);
                 var dgFileName = DependencyGraphSpec.GetDGSpecFileName(projFileName);
                 return Path.Combine(outputRoot, dgFileName);
