@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -94,14 +95,7 @@ namespace NuGet.Core.FuncTest
             var exception = await ThrowsException<HttpRequestException>(server);
 #if IS_CORECLR
             Assert.NotNull(exception.InnerException);
-            if (!RuntimeEnvironmentHelper.IsWindows)
-            {
-                Assert.Equal("Connection refused", exception.InnerException.Message);
-            }
-            else
-            {
-                Assert.Equal("No connection could be made because the target machine actively refused it", exception.InnerException.Message);
-            }
+            Assert.IsType<SocketException>(exception.InnerException);
 #else
             var innerException = Assert.IsType<WebException>(exception.InnerException);
             Assert.Equal(WebExceptionStatus.ConnectFailure, innerException.Status);
@@ -116,10 +110,7 @@ namespace NuGet.Core.FuncTest
 
             // Act & Assert
             var exception = await ThrowsException<HttpRequestException>(server);
-#if IS_CORECLR
-            Assert.Null(exception.InnerException);
-            Assert.Equal("The server returned an invalid or unrecognized response.", exception.Message);
-#else
+#if IS_DESKTOP
             var innerException = Assert.IsType<WebException>(exception.InnerException);
             Assert.Equal(WebExceptionStatus.ServerProtocolViolation, innerException.Status);
 #endif
@@ -135,19 +126,7 @@ namespace NuGet.Core.FuncTest
             var exception = await ThrowsException<HttpRequestException>(server);
 #if IS_CORECLR
             Assert.NotNull(exception.InnerException);
-
-            if (RuntimeEnvironmentHelper.IsMacOSX)
-            {
-                Assert.Equal("Device not configured", exception.InnerException.Message);
-            }
-            else if (!RuntimeEnvironmentHelper.IsWindows)
-            {
-                Assert.Equal("No such device or address", exception.InnerException.Message);
-            }
-            else
-            {
-                Assert.Equal("No such host is known", exception.InnerException.Message);
-            }
+            Assert.IsType<SocketException>(exception.InnerException);
 #else
             var innerException = Assert.IsType<WebException>(exception.InnerException);
             Assert.Equal(WebExceptionStatus.NameResolutionFailure, innerException.Status);

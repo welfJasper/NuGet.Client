@@ -1,4 +1,4 @@
-﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
@@ -77,10 +77,8 @@ namespace NuGet.Versioning.Test
             Throws<TArgException>(act, ex =>
                 {
                     Assert.Equal(paramName, ex.ParamName);
-                    var lines = ex.Message.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                    Assert.Equal(2, lines.Length);
-                    Assert.Equal(message, lines[0]);
-                    Assert.True(lines[1].EndsWith(paramName));
+                    Assert.Contains(message, ex.Message);
+                    Assert.Contains(paramName, ex.Message);
                 });
         }
     }

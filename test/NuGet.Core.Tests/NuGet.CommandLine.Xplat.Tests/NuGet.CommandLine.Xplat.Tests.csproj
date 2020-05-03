@@ -3,8 +3,7 @@
   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
 
   <PropertyGroup>
-    <TargetFrameworks>$(TargetFrameworksExe)</TargetFrameworks>
-    <TargetFrameworks Condition=" '$(IsXPlat)' == 'true' ">$(NETCoreTargetFramework)</TargetFrameworks>
+    <TargetFrameworks>$(NetCoreTestTargetFramework)</TargetFrameworks>
     <TestProject>true</TestProject>
     <UseParallelXunit>true</UseParallelXunit>
     <Description>Unit tests for NuGet.CommandLine.XPlat.</Description>
@@ -18,7 +17,7 @@
   <ItemGroup>
     <Reference Include="System.IO.Compression" />
   </ItemGroup>
-  
+
   <Import Project="$(BuildCommonDirectory)common.targets"/>
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 </Project>

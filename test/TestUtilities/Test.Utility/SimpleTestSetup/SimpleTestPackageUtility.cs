@@ -103,7 +103,11 @@ namespace NuGet.Test.Utility
         /// <summary>
         /// Write a zip file to a stream.
         /// </summary>
-        public static async Task CreatePackageAsync(Stream stream, SimpleTestPackageContext packageContext)
+        public static
+#if IS_DESKTOP
+        async
+#endif
+        Task CreatePackageAsync(Stream stream, SimpleTestPackageContext packageContext)
         {
             var id = packageContext.Id;
             var version = packageContext.Version;
@@ -287,6 +291,10 @@ namespace NuGet.Test.Utility
 
             // Reset position
             stream.Position = 0;
+
+#if !IS_DESKTOP
+                return Task.CompletedTask;
+#endif
         }
 
 #if IS_DESKTOP

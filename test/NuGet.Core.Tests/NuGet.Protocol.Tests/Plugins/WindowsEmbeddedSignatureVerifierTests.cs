@@ -1,4 +1,4 @@
-﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
@@ -22,10 +22,11 @@ namespace NuGet.Protocol.Plugins.Tests
         [InlineData("")]
         public void IsValid_ThrowsForNullOrEmpty(string filePath)
         {
-            var expectedMessage = $"Argument cannot be null or empty.{Environment.NewLine}Parameter name: filePath";
+            var expectedMessage = $"Argument cannot be null or empty.";
             var exception = Assert.Throws<ArgumentException>(() => _verifier.IsValid(filePath));
 
-            Assert.Equal(expectedMessage, exception.Message);
+            Assert.Equal("filePath", exception.ParamName);
+            Assert.Contains(expectedMessage, exception.Message);
         }
 
         [PlatformFact(Platform.Windows)]

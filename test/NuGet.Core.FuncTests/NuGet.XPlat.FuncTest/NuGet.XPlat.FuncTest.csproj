@@ -3,8 +3,8 @@
   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
 
   <PropertyGroup>
-    <TargetFrameworks>$(TargetFrameworksExe)</TargetFrameworks>
-    <TargetFrameworks Condition=" '$(IsXPlat)' == 'true' ">$(NETCoreTargetFramework)</TargetFrameworks>
+    <TargetFrameworks>$(TestTargetFrameworks)</TargetFrameworks>
+    <TargetFrameworks Condition=" '$(IsXPlat)' == 'true' ">$(NetCoreTestTargetFramework)</TargetFrameworks>
     <TestProject>true</TestProject>
     <TestProjectType>functional</TestProjectType>
     <Description>Functional tests for nuget in dotnet CLI scenarios, using the NuGet.CommandLine.XPlat assembly.</Description>
@@ -32,14 +32,14 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == '$(NETCoreTargetFramework)'">
+  <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETCoreApp'">
     <PackageReference Include="Microsoft.Net.Compilers.netcore" />
   </ItemGroup>
   <Target Name="CopyTargets" AfterTargets="AfterBuild">
-    <Copy Condition="'$(TargetFramework)' == '$(NETCoreTargetFramework)'" SourceFiles="$(MSBuildProjectDirectory)\$(OutputPath)\Microsoft.CSharp.Core.targets" DestinationFolder="$(MSBuildProjectDirectory)\$(OutputPath)\Roslyn\" />
-    <Copy Condition="'$(TargetFramework)' == '$(NETFXTargetFramework)'" SourceFiles="$(MSBuildProjectDirectory)\$(OutputPath)\Microsoft.CSharp.Core.targets" DestinationFolder="$(MSBuildProjectDirectory)\$(OutputPath)\..\..\$(VisualStudioVersion)\Bin\Roslyn\" />
+    <Copy Condition="'$(TargetFrameworkIdentifier)' == '.NETCoreApp'" SourceFiles="$(MSBuildProjectDirectory)\$(OutputPath)\Microsoft.CSharp.Core.targets" DestinationFolder="$(MSBuildProjectDirectory)\$(OutputPath)\Roslyn\" />
+    <Copy Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'" SourceFiles="$(MSBuildProjectDirectory)\$(OutputPath)\Microsoft.CSharp.Core.targets" DestinationFolder="$(MSBuildProjectDirectory)\$(OutputPath)\..\..\$(VisualStudioVersion)\Bin\Roslyn\" />
   </Target>
-  
+
   <Import Project="$(BuildCommonDirectory)common.targets" />
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 </Project>

@@ -25,11 +25,10 @@ namespace NuGet.Protocol.Tests
         {
             var exception = Assert.Throws<ArgumentException>(() => new DownloadResourceResult(status));
 
-            var expectedMessage = $"A stream should be provided when the result is available.{Environment.NewLine}"
-                + "Parameter name: status";
+            var expectedMessage = $"A stream should be provided when the result is available.";
 
             Assert.Equal("status", exception.ParamName);
-            Assert.Equal(expectedMessage, exception.Message);
+            Assert.Contains(expectedMessage, exception.Message);
         }
 
         [Theory]

@@ -5,7 +5,6 @@
   <PropertyGroup>
     <TargetFrameworks>$(TargetFrameworksExe)</TargetFrameworks>
     <NoWarn>$(NoWarn);CS1591</NoWarn>
-    <NoWarn Condition="'$(TargetFramework)' == '$(NETCoreTargetFramework)'">$(NoWarn);CS1998</NoWarn>
     <PackProject>true</PackProject>
     <Shipping>true</Shipping>
     <IsPackable>true</IsPackable>
@@ -19,7 +18,7 @@
     <EmbeddedResource Include="compiler\resources\*" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == '$(NETFXTargetFramework)' ">
+  <ItemGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETFramework' ">
     <ProjectReference Include="$(NuGetClientsSrcDirectory)NuGet.CommandLine\NuGet.CommandLine.csproj" />
   </ItemGroup>
 
@@ -50,12 +49,12 @@
     <PackageReference Include="xunit" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == '$(NETFXTargetFramework)' ">
+  <ItemGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETFramework' ">
     <PackageReference Include="Microsoft.VisualStudio.ProjectSystem" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Shell.15.0" PrivateAssets="All" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == '$(NETFXTargetFramework)' ">
+  <ItemGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETFramework' ">
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.Net.Http" />
@@ -64,14 +63,14 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == '$(NETCoreTargetFramework)' ">
+  <ItemGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETCoreApp' ">
     <PackageReference Include="System.Diagnostics.Process" />
     <PackageReference Include="System.IO.Compression.ZipFile" />
     <PackageReference Include="System.Security.Cryptography.Pkcs" />
   </ItemGroup>
 
   <!-- Remove files that do not support netcore -->
-  <ItemGroup Condition=" '$(TargetFramework)' == '$(NETCoreTargetFramework)' ">
+  <ItemGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETCoreApp' ">
     <Compile Remove="PackageManagement\*.cs" />
     <Compile Remove="ProjectManagement\*.cs" />
     <Compile Remove="Threading\*.cs" />

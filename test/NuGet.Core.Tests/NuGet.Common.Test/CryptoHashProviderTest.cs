@@ -1,4 +1,4 @@
-﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
@@ -55,9 +55,8 @@ namespace NuGet.Common.Test
             var tex = Assert.IsAssignableFrom<ArgumentException>(ex);
             Assert.Equal("hashAlgorithm", tex.ParamName);
             var lines = ex.Message.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-            Assert.Equal(2, lines.Length);
-            Assert.Equal(String.Format("Hash algorithm '{0}' is unsupported. Supported algorithms include: SHA512 and SHA256.", hashAlgorithm), lines[0]);
-            Assert.True(lines[1].EndsWith("hashAlgorithm"));
+            Assert.Contains(string.Format("Hash algorithm '{0}' is unsupported. Supported algorithms include: SHA512 and SHA256.", hashAlgorithm), ex.Message);
+            Assert.Contains("hashAlgorithm", ex.Message);
         }
 
         [Theory]

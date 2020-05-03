@@ -17,6 +17,8 @@
     <NetStandardVersion>netstandard2.0</NetStandardVersion>
     <TargetFrameworksExe>$(NETFXTargetFramework);$(NETCoreTargetFramework)</TargetFrameworksExe>
     <TargetFrameworksLibrary>$(NETFXTargetFramework);$(NetStandardVersion)</TargetFrameworksLibrary>
+    <NetCoreTestTargetFramework>netcoreapp3.1</NetCoreTestTargetFramework>
+    <TestTargetFrameworks>$(NETFXTargetFramework);$(NetCoreTestTargetFramework)</TestTargetFrameworks>
     <RepositoryRootDirectory>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), 'README.md'))\</RepositoryRootDirectory>
     <BuildCommonDirectory>$(RepositoryRootDirectory)build\</BuildCommonDirectory>
     <SolutionFile>$(RepositoryRootDirectory)$(RepositoryName).sln</SolutionFile>
