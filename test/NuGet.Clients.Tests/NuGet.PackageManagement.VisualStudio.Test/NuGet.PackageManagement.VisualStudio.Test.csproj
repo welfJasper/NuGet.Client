@@ -57,13 +57,10 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.ProjectSystem" />
     <PackageReference Include="Newtonsoft.Json" NoWarn="NU1605" />
+    <PackageReference Include="VSLangProj140" />
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="VSLangProj140">
-      <HintPath>$(SolutionPackagesFolder)vslangproj140\14.0.25029\lib\net20\VSLangProj140.dll</HintPath>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </Reference>
     <Reference Include="VSLangProj150">
       <HintPath>$(SolutionPackagesFolder)vslangproj150\1.0.0\lib\net46\VSLangProj150.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>

@@ -72,6 +72,7 @@
         <PackageReference Update="System.Threading.Thread" Version="$(SystemPackagesVersion)" />
         <PackageReference Update="VSLangProj" Version="7.0.3300" />
         <PackageReference Update="VSLangProj110" Version="11.0.61030" />
+        <PackageReference Update="VSLangProj140" version="14.0.25029" />
         <PackageReference Update="VSLangProj157" Version="15.7.0" />
         <PackageReference Update="VSLangProj2" Version="7.0.5000" />
         <PackageReference Update="VSSDK.TemplateWizardInterface" Version="12.0.4" />
