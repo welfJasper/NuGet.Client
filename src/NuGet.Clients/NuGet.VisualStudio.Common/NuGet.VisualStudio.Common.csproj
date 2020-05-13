@@ -17,10 +17,7 @@
     <Reference Include="Microsoft.VisualStudio.ProjectSystem">
       <HintPath>$(EnlistmentRoot)\packages\microsoft.visualstudio.projectsystem\16.0.201-pre-g7d366164d0\lib\net46\Microsoft.VisualStudio.ProjectSystem.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Build">
-      <HintPath>$(EnlistmentRoot)\packages\microsoft.build\15.1.262-preview5\lib\net46\Microsoft.Build.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
+    <PackageReference Include="Microsoft.Build" />
     <PackageReference Include="Microsoft.Internal.VisualStudio.Shell.Embeddable" ExcludeAssets="build" />
     <PackageReference Include="Microsoft.ServiceHub.Framework" NoWarn="NU1605" />
     <PackageReference Include="Microsoft.TeamFoundationServer.ExtendedClient" />
