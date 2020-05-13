@@ -58,14 +58,9 @@
     <PackageReference Include="Microsoft.VisualStudio.ProjectSystem" />
     <PackageReference Include="Newtonsoft.Json" NoWarn="NU1605" />
     <PackageReference Include="VSLangProj140" />
+    <PackageReference Include="VSLangProj150" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="VSLangProj150">
-      <HintPath>$(SolutionPackagesFolder)vslangproj150\1.0.0\lib\net46\VSLangProj150.dll</HintPath>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </Reference>
-  </ItemGroup>
   <ItemGroup>
     <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
   </ItemGroup>

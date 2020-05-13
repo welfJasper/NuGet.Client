@@ -30,12 +30,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="VSLangProj150">
-      <HintPath>$(SolutionPackagesFolder)vslangproj150\1.0.0\lib\net46\VSLangProj150.dll</HintPath>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
     <Reference Include="Microsoft.Build.Utilities.v4.0" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
@@ -278,6 +272,7 @@
     <PackageReference Include="Newtonsoft.Json" NoWarn="NU1605" />
     <PackageReference Include="VSLangProj110" />
     <PackageReference Include="VSLangProj140" />
+    <PackageReference Include="VSLangProj150" />
     <PackageReference Include="VSLangProj157" />
     <PackageReference Include="VSLangProj2" />
   </ItemGroup>
