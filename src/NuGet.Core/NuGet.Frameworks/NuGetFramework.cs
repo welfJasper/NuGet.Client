@@ -23,7 +23,6 @@ namespace NuGet.Frameworks
         private readonly string _frameworkIdentifier;
         private readonly Version _frameworkVersion;
         private readonly string _frameworkProfile;
-        private const string Portable = "portable";
         private int? _hashCode;
 
         public NuGetFramework(NuGetFramework framework)
