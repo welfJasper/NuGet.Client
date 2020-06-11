@@ -1,0 +1,27 @@
+{
+  "comments": "A sample dot-devinit file",
+  "run": [
+    {
+      "tool": "nuget-restore",
+      "comments": "Restores nuget packages to current directory 'Packages' folder. Input is optional and used for packages.config path.",
+      "input": "c:\\workload\\nuget.client\\build\\bootstrap.proj"
+    },
+    {
+      "tool": "set-env",
+      "input": "Foo=Bar",
+      "comments": "Set-env can set, display or delete individual variables and can display all variables."
+    },
+    {
+      "tool": "require-dotnetsdk",
+      "input": "3.1.300"
+    },
+    {
+      "tool": "require-nuget"
+    },
+    {
+      "tool": "require-vscomponent",
+      "comments": "Imports .vsconfig file which is passed as input to Visual Studio.",
+      "input": "C:\\.vsconfig"
+    }
+  ]
+}
