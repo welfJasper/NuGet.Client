@@ -318,6 +318,8 @@ namespace NuGet.Commands
                 builder.MinClientVersion = _packArgs.MinClientVersion;
             }
 
+            builder.SuppressRequireLicenseAcceptance = true;
+
             CheckForUnsupportedFrameworks(builder);
 
             ExcludeFiles(builder.Files);
