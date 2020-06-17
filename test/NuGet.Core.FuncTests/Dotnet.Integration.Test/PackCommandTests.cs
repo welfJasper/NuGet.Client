@@ -4573,6 +4573,8 @@ namespace ClassLibrary
                 }
 
                 msbuildFixture.RestoreProject(workingDirectory, projectName, string.Empty);
+
+                // Test without a license
                 msbuildFixture.PackProject(workingDirectory, projectName, $"/p:PackageOutputPath={workingDirectory}");
 
                 var nupkgPath = Path.Combine(workingDirectory, $"{projectName}.1.0.0.nupkg");
@@ -4586,7 +4588,7 @@ namespace ClassLibrary
 
                 Assert.Null(document.Root.Element(ns + "metadata").Element(ns + "requireLicenseAcceptance"));
 
-                // Test with a licence
+                // Test with a license
                 ProjectFileUtils.AddProperty(xml, "PackageLicenseExpression", "MIT");
 
                 using (var stream = File.Create(projectFile))
@@ -4637,7 +4639,7 @@ namespace ClassLibrary
 
                 Assert.Null(document.Root.Element(ns + "metadata").Element(ns + "requireLicenseAcceptance"));
 
-                // Test with a licence
+                // Test with a license
                 ProjectFileUtils.AddProperty(xml, "PackageLicenseExpression", "MIT");
 
                 using (var stream = File.Create(projectFile))
