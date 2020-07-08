@@ -571,12 +571,12 @@ jobs:
 #     condition: "eq(variables['Agent.JobStatus'], 'Failed')"
 
 - job: Functional_Tests_On_Windows
-  dependsOn: Initialize_Build
+  # dependsOn: Initialize_Build
   timeoutInMinutes: 120
-  variables:
-    BuildNumber: $[dependencies.Initialize_Build.outputs['updatebuildnumber.BuildNumber']]
-    FullVstsBuildNumber: $[dependencies.Initialize_Build.outputs['updatebuildnumber.FullVstsBuildNumber']]
-    SDKVersionForBuild: $[dependencies.Initialize_Build.outputs['getSDKVersionForBuild.SDKVersionForBuild']]
+  # variables:
+    # BuildNumber: $[dependencies.Initialize_Build.outputs['updatebuildnumber.BuildNumber']]
+    # FullVstsBuildNumber: $[dependencies.Initialize_Build.outputs['updatebuildnumber.FullVstsBuildNumber']]
+    # SDKVersionForBuild: $[dependencies.Initialize_Build.outputs['getSDKVersionForBuild.SDKVersionForBuild']]
   condition: "and(succeeded(),eq(variables['RunFunctionalTestsOnWindows'], 'true')) "
   pool:
     vmImage: windows-latest
@@ -592,6 +592,16 @@ jobs:
 
   steps:
   - task: PowerShell@1
+    displayName: "Get SDK Version For Build"
+    name: "getSDKVersionForBuild"
+    inputs:
+      scriptType: "inlineScript"
+      inlineScript: |
+        $msbuildExe = 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\bin\msbuild.exe'
+        $SDKVersionForBuild = & $msbuildExe $env:BUILD_REPOSITORY_LOCALPATH\build\config.props /v:m /nologo /t:GetCliVersionForBuilding
+        Write-Host "##vso[task.setvariable variable=SDKVersionForBuild;isOutput=true]$SDKVersionForBuild"
+
+  - task: PowerShell@1
     inputs:
       scriptName: "$(Build.Repository.LocalPath)\\scripts\\utils\\InstallCLIforBuild.ps1"
       arguments: '$(SDKVersionForBuild)'
@@ -604,13 +614,13 @@ jobs:
       inlineScript: |
         Write-Host "##vso[task.setvariable variable=Path]${env:AGENT_TEMPDIRECTORY}\dotnet\;${env:Path}"
 
-  - task: PowerShell@1
-    displayName: "Print Environment Variables"
-    inputs:
-      scriptType: "inlineScript"
-      inlineScript: |
-        Write-Host "##vso[build.updatebuildnumber]$env:FullVstsBuildNumber"
-        Get-ChildItem Env: | Sort-Object Name | Format-Table -Wrap -AutoSize
+  # - task: PowerShell@1
+  #   displayName: "Print Environment Variables"
+  #   inputs:
+  #     scriptType: "inlineScript"
+  #     inlineScript: |
+  #       Write-Host "##vso[build.updatebuildnumber]$env:FullVstsBuildNumber"
+  #       Get-ChildItem Env: | Sort-Object Name | Format-Table -Wrap -AutoSize
 
   - task: PowerShell@1
     displayName: "Download Config Files"
@@ -635,7 +645,7 @@ jobs:
       solution: "build\\build.proj"
       msbuildVersion: "16.0"
       configuration: "$(BuildConfiguration)"
-      msbuildArguments: "/t:RestoreVS /p:BuildNumber=$(BuildNumber) /p:BuildRTM=false /v:m"
+      msbuildArguments: "/t:RestoreVS /p:BuildRTM=false /v:m"
 
   - task: MSBuild@1
     displayName: "Run Functional Tests"
@@ -644,7 +654,7 @@ jobs:
       solution: "build\\build.proj"
       msbuildVersion: "16.0"
       configuration: "$(BuildConfiguration)"
-      msbuildArguments: "/t:CoreFuncTests /p:BuildRTM=false /p:BuildNumber=$(BuildNumber) /p:TestResultOutputFormat=xml /p:SkipDesktopAssemblies=$(SkipDesktopAssemblies) /p:SkipCoreAssemblies=$(SkipCoreAssemblies)"
+      msbuildArguments: "/t:CoreFuncTests /p:BuildRTM=false /p:TestResultOutputFormat=xml /p:SkipDesktopAssemblies=$(SkipDesktopAssemblies) /p:SkipCoreAssemblies=$(SkipCoreAssemblies)"
 
   - task: PublishTestResults@2
     displayName: "Publish Test Results"
