@@ -604,7 +604,7 @@ jobs:
   - task: PowerShell@1
     inputs:
       scriptName: "$(Build.Repository.LocalPath)\\scripts\\utils\\InstallCLIforBuild.ps1"
-      arguments: 'master 5.0.100-preview.4.20258.7'
+      arguments: '"master 5.0.100-preview.4.20258.7"'
     displayName: "Install .NET 5.0 for build"
 
   - task: PowerShell@1
