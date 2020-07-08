@@ -654,7 +654,7 @@ jobs:
       solution: "build\\build.proj"
       msbuildVersion: "16.0"
       configuration: "$(BuildConfiguration)"
-      msbuildArguments: "/t:CoreFuncTests /p:BuildRTM=false /p:TestResultOutputFormat=xml /p:SkipDesktopAssemblies=$(SkipDesktopAssemblies) /p:SkipCoreAssemblies=$(SkipCoreAssemblies)"
+      msbuildArguments: "/t:CoreFuncTests /p:BuildRTM=false /p:TestResultOutputFormat=xml /p:SkipDesktopAssemblies=$(SkipDesktopAssemblies) /p:SkipCoreAssemblies=$(SkipCoreAssemblies) /p:MS_PFX_PATH= /p:NUGET_PFX_PATH="
 
   - task: PublishTestResults@2
     displayName: "Publish Test Results"
