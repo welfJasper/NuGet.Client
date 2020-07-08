@@ -579,7 +579,7 @@ jobs:
     SDKVersionForBuild: $[dependencies.Initialize_Build.outputs['getSDKVersionForBuild.SDKVersionForBuild']]
   condition: "and(succeeded(),eq(variables['RunFunctionalTestsOnWindows'], 'true')) "
   pool:
-    name: VSEng-MicroBuildVS2019
+    vmImage: windows-latest
     demands:
         - DotNetFramework
         - msbuild
