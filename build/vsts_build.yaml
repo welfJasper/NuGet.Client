@@ -1012,12 +1012,6 @@ jobs:
   #       $(System.DefaultWorkingDirectory)\\VSCollect.exe -zip:$(EndToEndResultsDropPath)\\apex-collectlogs.zip
   #   condition: "failed()"
 
-  - task: NuGetCommand@2
-    displayName: "Add Apex Feed Source"
-    inputs:
-      command: "custom"
-      arguments: "sources add -Name ApexFeed -Source $(ApexPackageFeedUrl) -UserName $(ApexPackageFeedUsername) -Password $(ApexPackageFeedPassword) -ConfigFile $(System.DefaultWorkingDirectory)\\NuGet.config"
-
   - task: MSBuild@1
     displayName: "Restore Apex Tests"
     inputs:
