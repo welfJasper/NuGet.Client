@@ -31,6 +31,7 @@
     <Compile Include="Apex\ApexBaseTestClass.cs" />
     <Compile Include="Apex\ApexTestContext.cs" />
     <Compile Include="Apex\NuGetConsoleTestExtension.cs" />
+    <Compile Include="Apex\NuGetProjectServiceService.cs" />
     <Compile Include="Apex\NuGetTestOperationConfiguration.cs" />
     <Compile Include="Apex\SharedVisualStudioHostTestClass.cs" />
     <Compile Include="Apex\NuGetApexTestService.cs" />
@@ -41,6 +42,7 @@
     <Compile Include="Fixtures\VisualStudioHostFixture.cs" />
     <Compile Include="Fixtures\VisualStudioHostFixtureFactory.cs" />
     <Compile Include="Fixtures\VisualStudioOperationsFixture.cs" />
+    <Compile Include="NuGetEndToEndTests\NuGetProjectServiceTestCase.cs" />
     <Compile Include="NuGetEndToEndTests\IVsServicesTestCase.cs" />
     <Compile Include="NuGetPackageSigningTests\AuthorSignedPackageTestCase.cs" />
     <Compile Include="NuGetEndToEndTests\NuGetConsoleTestCase.cs" />
@@ -78,6 +80,7 @@
       <Name>NuGet.VisualStudio</Name>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\src\NuGet.Clients\NuGet.VisualStudio.Contracts\NuGet.VisualStudio.Contracts.csproj" />
     <ProjectReference Include="..\..\TestUtilities\Test.Utility\Test.Utility.csproj" />
     <ProjectReference Include="..\..\TestExtensions\NuGet.StaFact\NuGet.StaFact.csproj" />
     <ProjectReference Include="..\NuGet.Console.TestContract\NuGet.Console.TestContract.csproj" />
@@ -98,5 +101,6 @@
   </PropertyGroup>
   
   <Import Project="$(BuildCommonDirectory)common.targets" />
+  <Import Project="$(BuildCommonDirectory)embedinterop.targets" />
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 </Project>
