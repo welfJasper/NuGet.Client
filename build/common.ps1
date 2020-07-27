@@ -182,7 +182,7 @@ Function Install-NuGet {
     if ($Force -or -not (Test-Path $NuGetExe)) {
         Trace-Log 'Downloading nuget.exe'
 
-        wget https://dist.nuget.org/win-x86-commandline/v4.0.0/nuget.exe -OutFile $NuGetExe
+        wget --secure-protocol=TLSv1_2 https://dist.nuget.org/win-x86-commandline/v4.0.0/nuget.exe -OutFile $NuGetExe
     }
 
     # Display nuget info
