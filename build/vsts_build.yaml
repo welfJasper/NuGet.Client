@@ -5,10 +5,10 @@ phases:
   queue:
     name: VSEng-MicroBuildVS2017
     timeoutInMinutes: 60
-    demands: 
+    demands:
       - DotNetFramework
       - msbuild
-  
+
   steps:
   - task: PowerShell@1
     displayName: "Initialize Git Commit Status on GitHub"
@@ -17,7 +17,7 @@ phases:
       inlineScript: |
         . $(Build.Repository.LocalPath)\\scripts\\utils\\PostGitCommitStatus.ps1
         InitializeAllTestsToPending -PersonalAccessToken $(NuGetLurkerPersonalAccessToken) -CommitSha $(Build.SourceVersion)
-  
+
   - task: PowerShell@1
     displayName: "Update Build Number"
     name: "updatebuildnumber"
@@ -42,7 +42,7 @@ phases:
       scriptType: "inlineScript"
       inlineScript: |
         Write-Host "##vso[build.addbuildtag]$env:BUILD_SOURCEVERSIONAUTHOR"
-        Write-Host "##vso[build.addbuildtag]$env:BUILD_SOURCEBRANCHNAME" 
+        Write-Host "##vso[build.addbuildtag]$env:BUILD_SOURCEBRANCHNAME"
 
 - phase: Build_and_UnitTest
   dependsOn: Initialize_Build
@@ -56,13 +56,11 @@ phases:
     matrix:
       RTM:
         BuildRTM: "true"
-      NonRTM:
-        BuildRTM: "false"
-    demands: 
+    demands:
       - DotNetFramework
       - msbuild
 
-  steps:  
+  steps:
   - task: PowerShell@1
     displayName: "Update Build Number"
     inputs:
@@ -123,27 +121,6 @@ phases:
       configuration: '$(BuildConfiguration)'
       msbuildArguments: '/t:BuildVS15NoVSIX /p:NUGET_PFX_PATH=$(Build.Repository.LocalPath)\keys\NuGetKey.snk /p:MS_PFX_PATH=$(Build.Repository.LocalPath)\keys\35MSSharedLib1024.snk  /p:BuildRTM=$(BuildRTM) /p:BuildNumber=$(BuildNumber)'
 
-  - task: MSBuild@1
-    displayName: "Run unit tests"
-    continueOnError: "true"
-    inputs:
-      solution: 'build\build.proj'
-      msbuildVersion: 15.0
-      configuration: '$(BuildConfiguration)'
-      msbuildArguments: '/t:CoreUnitTests;UnitTestsVS15 /p:NUGET_PFX_PATH=$(Build.Repository.LocalPath)\keys\NuGetKey.snk /p:MS_PFX_PATH=$(Build.Repository.LocalPath)\keys\35MSSharedLib1024.snk  /p:BuildRTM=$(BuildRTM) /p:BuildNumber=$(BuildNumber) /p:TestResultOutputFormat=xml'
-    condition: "and(succeeded(),eq(variables['BuildRTM'], 'true'))"
-
-  - task: PublishTestResults@2
-    displayName: "Publish Test Results"
-    inputs:
-      testRunner: "XUnit"
-      testResultsFiles: "*.xml"
-      testRunTitle: "NuGet.Client Unit Tests On Windows"
-      searchFolder: "$(Build.Repository.LocalPath)\\build\\TestResults"
-      mergeTestResults: "true"
-      publishRunAttachments: "false"
-    condition: "and(succeededOrFailed(),eq(variables['BuildRTM'], 'true'))"
-
   - task: PowerShell@1
     displayName: "Initialize Git Commit Status on GitHub"
     inputs:
@@ -169,7 +146,7 @@ phases:
       msbuildVersion: 15.0
       configuration: '$(BuildConfiguration)'
       msbuildArguments: '/t:AfterBuild'
-    condition:  and(succeeded(),eq(variables['BuildRTM'], 'false')) 
+    condition:  and(succeeded(),eq(variables['BuildRTM'], 'false'))
 
   - task: MSBuild@1
     displayName: 'Sign assemblies'
@@ -237,7 +214,7 @@ phases:
       solution: 'setup\Microsoft.VisualStudio.NuGet.Core.vsmanproj'
       msbuildVersion: 15.0
       configuration: '$(BuildConfiguration)'
-    condition:  and(succeeded(),eq(variables['BuildRTM'], 'false')) 
+    condition:  and(succeeded(),eq(variables['BuildRTM'], 'false'))
 
   - task: MSBuild@1
     displayName: "Generate VSMAN file for Build Tools VSIX"
@@ -253,7 +230,7 @@ phases:
       scriptName: '$(Build.Repository.LocalPath)\scripts\cibuild\CreateEndToEndTestPackage.ps1'
       arguments: "-c $(BuildConfiguration) -tv 15 -out $(Build.Repository.LocalPath)\\artifacts\\VS15 -NuGetToolsPath $(NuGetCIToolsFolder)"
       failOnStandardError: "false"
-    condition:  and(succeeded(),eq(variables['BuildRTM'], 'false')) 
+    condition:  and(succeeded(),eq(variables['BuildRTM'], 'false'))
 
   - task: CopyFiles@2
     displayName: 'Copy NuGet.exe, VSIX and EndToEnd'
@@ -262,11 +239,11 @@ phases:
       Contents: |
         $(VsixPublishDir)\NuGet.exe
         $(VsixPublishDir)\NuGet.pdb
-        $(VsixPublishDir)\Microsoft.VisualStudio.NuGet.Core.json 
+        $(VsixPublishDir)\Microsoft.VisualStudio.NuGet.Core.json
         $(VsixPublishDir)\NuGet.Tools.vsix
         $(VsixPublishDir)\Microsoft.VisualStudio.NuGet.BuildTools.vsix
         $(VsixPublishDir)\Microsoft.VisualStudio.NuGet.BuildTools.json
-        $(VsixPublishDir)\EndToEnd.zip 
+        $(VsixPublishDir)\EndToEnd.zip
       TargetFolder: '$(BuildOutputTargetPath)\artifacts'
 
   - task: PublishBuildArtifacts@1
@@ -292,7 +269,7 @@ phases:
       scriptName: '$(Build.Repository.LocalPath)\scripts\cibuild\PublishArtifactsFromVsts.ps1'
       arguments: '-NuGetBuildFeedUrl $(NuGetBuildFeed) -NuGetBuildSymbolsFeedUrl $(NuGetBuildSymbolsFeed) -DotnetCoreFeedUrl $(DotnetCoreBuildFeed) -DotnetCoreSymbolsFeedUrl $(DotnetCoreSymbolsFeed) -NuGetBuildFeedApiKey $(NuGetBuildApiKey) -DotnetCoreFeedApiKey $(DotnetCoreFeedApiKey)'
       failOnStandardError: "true"
-    condition:  and(succeeded(),eq(variables['PublishArtifactsToMyGet'], 'true'),eq(variables['BuildRTM'], 'false')) 
+    condition:  and(succeeded(),eq(variables['PublishArtifactsToMyGet'], 'true'),eq(variables['BuildRTM'], 'false'))
 
   - task: MSBuild@1
     displayName: 'Collect Build Symbols'
@@ -302,14 +279,14 @@ phases:
       configuration: '$(BuildConfiguration)'
       msbuildArguments: "/p:IsSymbolBuild=true"
     condition: " and(succeeded(),eq(variables['BuildRTM'], 'false'), eq(variables['IsOfficialBuild'], 'true')) "
-    
+
   - task: CopyFiles@2
     displayName: 'Copy Symbols'
     inputs:
       SourceFolder: '$(Build.Repository.LocalPath)\artifacts\symbolstoindex'
       Contents: '**\*'
       TargetFolder: '$(BuildOutputTargetPath)\symbols'
-    condition: " and(succeeded(),eq(variables['BuildRTM'], 'false'), eq(variables['IsOfficialBuild'], 'true')) "      
+    condition: " and(succeeded(),eq(variables['BuildRTM'], 'false'), eq(variables['IsOfficialBuild'], 'true')) "
 
   - task: ms-vscs-artifact.build-tasks.artifactSymbolTask-1.artifactSymbolTask@0
     displayName: 'Publish Symbols on Symweb'
@@ -320,13 +297,13 @@ phases:
       detailedLog: true
       expirationInDays: 45
       usePat: false
-    condition: " and(succeeded(),eq(variables['BuildRTM'], 'false'), eq(variables['IsOfficialBuild'], 'true')) "  	
+    condition: " and(succeeded(),eq(variables['BuildRTM'], 'false'), eq(variables['IsOfficialBuild'], 'true')) "
 
   - task: ms-vseng.MicroBuildTasks.4305a8de-ba66-4d8b-b2d1-0dc4ecbbf5e8.MicroBuildUploadVstsDropFolder@1
     displayName: 'Upload VSTS Drop'
     inputs:
       DropFolder: '$(Build.Repository.LocalPath)\artifacts\VS15'
-    condition:  and(succeeded(),eq(variables['BuildRTM'], 'false')) 
+    condition:  and(succeeded(),eq(variables['BuildRTM'], 'false'))
 
   - task: PowerShell@1
     displayName: 'Validate Vsix Localization'
@@ -334,7 +311,7 @@ phases:
       scriptName: '$(Build.Repository.LocalPath)\scripts\cibuild\BuildValidator.ps1'
       arguments: '-BuildRTM $(BuildRTM) -BuildOutputTargetPath $(BuildOutputTargetPath) -ValidateVsix'
     condition: " and(succeeded(), eq(variables['IsOfficialBuild'], 'true')) "
-  
+
   - task: PowerShell@1
     displayName: 'Validate Repository Artifacts Localization'
     inputs:
@@ -355,20 +332,6 @@ phases:
         Get-ChildItem $(BuildOutputTargetPath) -Recurse | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue
         Remove-Item -Path $(BuildOutputTargetPath) -Force -Recurse -ErrorAction SilentlyContinue
     condition: failed()
-
-
-- phase: Functional_Tests_On_Windows
-  dependsOn: Initialize_Build
-  variables:
-    BuildNumber: $[dependencies.Initialize_Build.outputs['updatebuildnumber.BuildNumber']]
-    FullVstsBuildNumber: $[dependencies.Initialize_Build.outputs['updatebuildnumber.FullVstsBuildNumber']]
-  condition: "and(succeeded(),eq(variables['RunFunctionalTestsOnWindows'], 'true')) "  	
-  queue:
-    name: VSEng-MicroBuildSxS
-    timeoutInMinutes: 120
-    demands: 
-        - DotNetFramework
-        - msbuild
 
   steps:
   - task: PowerShell@1
@@ -432,110 +395,4 @@ phases:
       inlineScript: |
         . $(Build.Repository.LocalPath)\\scripts\\utils\\PostGitCommitStatus.ps1
         SetCommitStatusForTestResult -PersonalAccessToken $(NuGetLurkerPersonalAccessToken) -CommitSha $(Build.SourceVersion) -VstsPersonalAccessToken $(VstsPersonalAccessToken) -TestName "Functional Tests On Windows"
-    condition: "always()"
-
-- phase: Tests_On_Linux
-  dependsOn: Initialize_Build
-  variables:
-    FULLVSTSBUILDNUMBER: $[dependencies.Initialize_Build.outputs['updatebuildnumber.FullVstsBuildNumber']]
-  condition: "and(succeeded(),eq(variables['RunTestsOnLinux'], 'true')) "  	
-  queue:
-    name: DDNuGet-Linux
-    timeoutInMinutes: 45
-    demands: sh
-
-  steps:
-  - task: PowerShell@2
-    displayName: "Update Build Number"
-    inputs:
-      targetType: "inline"
-      script: |
-        Write-Host "##vso[build.updatebuildnumber]$env:FULLVSTSBUILDNUMBER"
-      failOnStderr: "true"
-    condition: "always()"
-
-  - task: ShellScript@2
-    displayName: "Run Tests"
-    continueOnError: "true"
-    inputs:
-      scriptPath: "scripts/funcTests/runFuncTests.sh"
-      disableAutoCwd: "true"
-      cwd: "$(Build.Repository.LocalPath)"
-
-  - task: PublishTestResults@2
-    displayName: "Publish Test Results"
-    condition: "succeededOrFailed()"
-    inputs:
-      testRunner: "XUnit"
-      testResultsFiles: "*.xml"
-      testRunTitle: "NuGet.Client Tests On Linux"
-      searchFolder: "$(Build.Repository.LocalPath)/build/TestResults"
-      mergeTestResults: "true"
-
-  - task: PowerShell@2
-    displayName: "Initialize Git Commit Status on GitHub"
-    inputs:
-      targetType: "inline"
-      arguments: "-VstsPersonalAccessToken $(VstsPersonalAccessToken)"
-      script: |
-        . $(Build.Repository.LocalPath)/scripts/utils/PostGitCommitStatus.ps1
-        SetCommitStatusForTestResult -PersonalAccessToken $(NuGetLurkerPersonalAccessToken) -VstsPersonalAccessToken $(VstsPersonalAccessToken) -CommitSha $(Build.SourceVersion) -TestName "Tests On Linux"        
-      failOnStderr: "true"
-    condition: "always()"
-
-- phase: Tests_On_Mac
-  dependsOn:
-  - Build_and_UnitTest
-  - Initialize_Build
-  variables:
-    FULLVSTSBUILDNUMBER: $[dependencies.Initialize_Build.outputs['updatebuildnumber.FullVstsBuildNumber']]
-  condition: "and(succeeded(),eq(variables['RunTestsOnMac'], 'true')) "  	
-  queue:
-    name: VSEng-MicroBuildMacSierra
-    timeoutInMinutes: 60
-    demands: sh
-
-  steps:
-  - task: PowerShell@2
-    displayName: "Update Build Number"
-    inputs:
-      targetType: "inline"
-      script: |
-        Write-Host "##vso[build.updatebuildnumber]$env:FULLVSTSBUILDNUMBER"
-      failOnStderr: "true"
-    condition: "always()"
-
-  - task: DownloadBuildArtifacts@0
-    displayName: "Download NuGet.ComamandLine.Test artifacts"
-    inputs:
-      artifactName: "NuGet.CommandLine.Test"
-      downloadPath: "$(Build.Repository.LocalPath)/artifacts"
-
-  - task: ShellScript@2
-    displayName: "Run Tests"
-    continueOnError: "true"
-    inputs:
-      scriptPath: "scripts/funcTests/runFuncTests.sh"
-      disableAutoCwd: "true"
-      cwd: "$(Build.Repository.LocalPath)"
-
-  - task: PublishTestResults@2
-    displayName: "Publish Test Results"
-    inputs:
-      testRunner: "XUnit"
-      testResultsFiles: "*.xml"
-      searchFolder: "$(Build.Repository.LocalPath)/build/TestResults"
-      mergeTestResults: "true"
-      testRunTitle: "NuGet.Client Tests On Mac"
-    condition: "succeededOrFailed()"
-
-  - task: PowerShell@2
-    displayName: "Initialize Git Commit Status on GitHub"
-    inputs:
-      targetType: "inline"
-      arguments: "-VstsPersonalAccessToken $(VstsPersonalAccessToken)"
-      script: |
-        . $(Build.Repository.LocalPath)/scripts/utils/PostGitCommitStatus.ps1
-        SetCommitStatusForTestResult -PersonalAccessToken $(NuGetLurkerPersonalAccessToken) -VstsPersonalAccessToken $(VstsPersonalAccessToken) -CommitSha $(Build.SourceVersion) -TestName "Tests On Mac"        
-      failOnStderr: "true"
     condition: "always()"
