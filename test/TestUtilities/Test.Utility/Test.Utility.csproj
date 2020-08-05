@@ -76,10 +76,10 @@
 
   <!-- Remove files that do not support netcore -->
   <ItemGroup Condition=" '$(IsCore)' == 'true' ">
-    <Compile Remove="PackageManagement\*.cs" />
+    <!-- <Compile Remove="PackageManagement\*.cs" />
     <Compile Remove="ProjectManagement\*.cs" />
   </ItemGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == '$(NETCoreTargetFramework)' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == '$(NETCoreTargetFramework)' "> -->
     <Compile Remove="ProjectManagement\TestProjectKProject.cs" />
     <Compile Remove="Threading\*.cs" />
   </ItemGroup>
