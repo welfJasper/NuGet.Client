@@ -108,14 +108,14 @@ namespace NuGet.PackageManagement.UI.Test.Models
         }
 
         [Fact]
-        public async void PackageIsVulnerable_Flagged()
+        public async void ViewModelMarkedVulnerableWhenMetadataHasVulnerability_Flagged()
         {
             await _testInstance.LoadPackageMetadataAsync(_metadataProvider, CancellationToken.None);
             Assert.True(_testInstance.IsPackageVulnerable);
         }
 
         [Fact]
-        public async void MaxVulnerabilitySeverity_Calculated()
+        public async void MaxVulnerabilitySeverityWhenMetadataHasVulnerability_Calculated()
         {
             await _testInstance.LoadPackageMetadataAsync(_metadataProvider, CancellationToken.None);
             Assert.Equal(_testInstance.PackageVulnerabilityMaxSeverity,

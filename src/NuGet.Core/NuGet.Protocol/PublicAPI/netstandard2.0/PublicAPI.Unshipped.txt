@@ -1,5 +1,6 @@
 NuGet.Protocol.Core.Types.IPackageSearchMetadata.GetVulnerabilityMetadataAsync() -> System.Threading.Tasks.Task<System.Collections.Generic.IEnumerable<NuGet.Protocol.PackageVulnerabilityMetadata>>
 NuGet.Protocol.Core.Types.PackageSearchMetadataBuilder.ClonedPackageSearchMetadata.GetVulnerabilityMetadataAsync() -> System.Threading.Tasks.Task<System.Collections.Generic.IEnumerable<NuGet.Protocol.PackageVulnerabilityMetadata>>
+NuGet.Protocol.Core.Types.PackageSearchMetadataBuilder.WithVulnerabilities(NuGet.Common.AsyncLazy<System.Collections.Generic.IEnumerable<NuGet.Protocol.PackageVulnerabilityMetadata>> lazyVulnerabilityFactory) -> NuGet.Protocol.Core.Types.PackageSearchMetadataBuilder
 NuGet.Protocol.LocalPackageSearchMetadata.GetVulnerabilityMetadataAsync() -> System.Threading.Tasks.Task<System.Collections.Generic.IEnumerable<NuGet.Protocol.PackageVulnerabilityMetadata>>
 NuGet.Protocol.PackageSearchMetadata.GetVulnerabilityMetadataAsync() -> System.Threading.Tasks.Task<System.Collections.Generic.IEnumerable<NuGet.Protocol.PackageVulnerabilityMetadata>>
 NuGet.Protocol.PackageSearchMetadata.VulnerabilityMetadata.get -> System.Collections.Generic.IEnumerable<NuGet.Protocol.PackageVulnerabilityMetadata>

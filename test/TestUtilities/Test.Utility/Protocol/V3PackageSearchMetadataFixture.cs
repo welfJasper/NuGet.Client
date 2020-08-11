@@ -16,7 +16,6 @@ namespace NuGet.Test.Utility
     public class V3PackageSearchMetadataFixture : IDisposable
     {
         private bool _disposedValue = false; // To detect redundant calls
-        //private readonly TestDirectory _testDirectory;
         public IPackageSearchMetadata TestData { get; private set; }
 
         public V3PackageSearchMetadataFixture()
@@ -43,11 +42,6 @@ namespace NuGet.Test.Utility
         {
             if (!_disposedValue)
             {
-                if (disposing)
-                {
-                    //_testDirectory.Dispose();
-                }
-
                 TestData = null;
                 _disposedValue = true;
             }

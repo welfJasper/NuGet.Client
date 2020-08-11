@@ -19,6 +19,7 @@ namespace NuGet.Protocol.Core.Types
         private readonly IPackageSearchMetadata _metadata;
         private AsyncLazy<IEnumerable<VersionInfo>> _lazyVersionsFactory;
         private AsyncLazy<PackageDeprecationMetadata> _lazyDeprecationFactory;
+        private AsyncLazy<IEnumerable<PackageVulnerabilityMetadata>> _lazyVulnerabilityFactory;
 
         public class ClonedPackageSearchMetadata : IPackageSearchMetadata
         {
@@ -82,6 +83,12 @@ namespace NuGet.Protocol.Core.Types
             return this;
         }
 
+        public PackageSearchMetadataBuilder WithVulnerabilities(AsyncLazy<IEnumerable<PackageVulnerabilityMetadata>> lazyVulnerabilityFactory)
+        {
+            _lazyVulnerabilityFactory = lazyVulnerabilityFactory;
+            return this;
+        }
+
         public IPackageSearchMetadata Build()
         {
             var clonedMetadata = new ClonedPackageSearchMetadata
@@ -107,6 +114,7 @@ namespace NuGet.Protocol.Core.Types
                 PrefixReserved = _metadata.PrefixReserved,
                 LicenseMetadata = _metadata.LicenseMetadata,
                 LazyDeprecationFactory = _lazyDeprecationFactory ?? AsyncLazy.New(_metadata.GetDeprecationMetadataAsync),
+                LazyVulnerabilityFactory = _lazyVulnerabilityFactory ?? AsyncLazy.New(_metadata.GetVulnerabilityMetadataAsync),
                 PackageReader =
                     (_metadata as LocalPackageSearchMetadata)?.PackageReader ??
                     (_metadata as ClonedPackageSearchMetadata)?.PackageReader,

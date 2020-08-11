@@ -228,15 +228,15 @@ namespace NuGet.PackageManagement.UI
             get
             {
                 return NuGetUIThreadHelper.JoinableTaskFactory.Run(async delegate
+                {
+                    var installedPackages = new List<Packaging.PackageReference>();
+                    foreach (var project in _nugetProjects)
                     {
-                        var installedPackages = new List<Packaging.PackageReference>();
-                        foreach (var project in _nugetProjects)
-                        {
-                            var projectInstalledPackages = await project.GetInstalledPackagesAsync(CancellationToken.None);
-                            installedPackages.AddRange(projectInstalledPackages);
-                        }
-                        return installedPackages.Select(e => e.PackageIdentity).Distinct(PackageIdentity.Comparer);
-                    });
+                        var projectInstalledPackages = await project.GetInstalledPackagesAsync(CancellationToken.None);
+                        installedPackages.AddRange(projectInstalledPackages);
+                    }
+                    return installedPackages.Select(e => e.PackageIdentity).Distinct(PackageIdentity.Comparer);
+                });
             }
         }
 

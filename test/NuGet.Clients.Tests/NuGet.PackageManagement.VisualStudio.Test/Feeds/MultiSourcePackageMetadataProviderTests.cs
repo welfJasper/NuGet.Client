@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -79,6 +80,7 @@ namespace NuGet.PackageManagement.VisualStudio.Test
 
                 var expectedVersionStrings = new[] { "1.0.0", "2.0.0" };
                 var deprecationMetadata = new PackageDeprecationMetadata();
+                var vulnerabilityMetadata = Enumerable.Empty<PackageVulnerabilityMetadata>();
                 Mock.Get(_metadataResource)
                     .Setup(x => x.GetMetadataAsync(TestPackageIdentity.Id, true, false, It.IsAny<SourceCacheContext>(), It.IsAny<Common.ILogger>(), It.IsAny<CancellationToken>()))
                     .ReturnsAsync(
@@ -87,6 +89,7 @@ namespace NuGet.PackageManagement.VisualStudio.Test
                             PackageSearchMetadataBuilder
                                 .FromIdentity(TestPackageIdentity)
                                 .WithDeprecation(new AsyncLazy<PackageDeprecationMetadata>(() => Task.FromResult(deprecationMetadata)))
+                                .WithVulnerabilities(new AsyncLazy<IEnumerable<PackageVulnerabilityMetadata>>(() => Task.FromResult(vulnerabilityMetadata)))
                                 .Build(),
 
                             PackageSearchMetadataBuilder

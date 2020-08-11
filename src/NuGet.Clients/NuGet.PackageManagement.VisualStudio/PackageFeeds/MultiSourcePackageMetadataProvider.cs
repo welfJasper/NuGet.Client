@@ -162,12 +162,13 @@ namespace NuGet.PackageManagement.VisualStudio
 
                 if (result != null)
                 {
-                    var versionsAndDeprecationMetadataTask = FetchAndMergeVersionsAndDeprecationMetadataAsync(identity, includePrerelease, cancellationToken);
+                    var versionsAndMetadataTask = FetchAndMergeVersionsAndMetadataAsync(identity, includePrerelease, cancellationToken);
 
                     return PackageSearchMetadataBuilder
                         .FromMetadata(result)
-                        .WithVersions(AsyncLazy.New(async () => (await versionsAndDeprecationMetadataTask).versions))
-                        .WithDeprecation(AsyncLazy.New(async () => (await versionsAndDeprecationMetadataTask).deprecationMetadata))
+                        .WithVersions(AsyncLazy.New(async () => (await versionsAndMetadataTask).versions))
+                        .WithDeprecation(AsyncLazy.New(async () => (await versionsAndMetadataTask).deprecationMetadata))
+                        .WithVulnerabilities(AsyncLazy.New(async () => (await versionsAndMetadataTask).vulnerabilityMetadata))
                         .Build();
                 }
             }
@@ -195,7 +196,15 @@ namespace NuGet.PackageManagement.VisualStudio
             return deprecationMetadatas.FirstOrDefault(d => d != null);
         }
 
-        private async Task<(IEnumerable<VersionInfo> versions, PackageDeprecationMetadata deprecationMetadata)> FetchAndMergeVersionsAndDeprecationMetadataAsync(
+        private static async Task<IEnumerable<PackageVulnerabilityMetadata>> MergeVulnerabilityMetadataAsync(PackageIdentity identity, IEnumerable<IPackageSearchMetadata> packages)
+        {
+            var vulnerabilityMetadatas = await Task.WhenAll(packages.Select(m => m.GetVulnerabilityMetadataAsync()));
+            return vulnerabilityMetadatas.FirstOrDefault(v => v?.Any() ?? false);
+        }
+
+        private async Task<(IEnumerable<VersionInfo> versions,
+            PackageDeprecationMetadata deprecationMetadata,
+            IEnumerable<PackageVulnerabilityMetadata> vulnerabilityMetadata)> FetchAndMergeVersionsAndMetadataAsync(
             PackageIdentity identity, bool includePrerelease, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -212,7 +221,9 @@ namespace NuGet.PackageManagement.VisualStudio
             var metadatas = (await Task.WhenAll(tasks))
                 .Where(m => m != null);
 
-            return (await MergeVersionsAsync(identity, metadatas), await MergeDeprecationMetadataAsync(identity, metadatas));
+            return (await MergeVersionsAsync(identity, metadatas),
+                await MergeDeprecationMetadataAsync(identity, metadatas),
+                await MergeVulnerabilityMetadataAsync(identity, metadatas));
         }
 
         internal async Task<T> GetMetadataTaskSafeAsync<T>(Func<Task<T>> getMetadataTask) where T: class
