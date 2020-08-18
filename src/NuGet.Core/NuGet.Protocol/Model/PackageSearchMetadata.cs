@@ -211,8 +211,6 @@ namespace NuGet.Protocol
         /// If vulnerability advisory is current, contains vulnerability information for this package; otherwise <c>null</c>.
         /// </summary>
         [JsonProperty(PropertyName = JsonProperties.Vulnerabilities)]
-        public IEnumerable<PackageVulnerabilityMetadata> VulnerabilityMetadata { get; private set; }
-
-        public Task<IEnumerable<PackageVulnerabilityMetadata>> GetVulnerabilityMetadataAsync() => Task.FromResult(VulnerabilityMetadata);
+        public IEnumerable<PackageVulnerabilityMetadata> Vulnerabilities { get; private set; }
     }
 }

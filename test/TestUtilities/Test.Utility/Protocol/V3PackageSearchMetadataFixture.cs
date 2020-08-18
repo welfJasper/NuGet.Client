@@ -22,7 +22,7 @@ namespace NuGet.Test.Utility
         {
             TestData = new MockPackageSearchMetadata()
             {
-                VulnerabilityMetadata = new List<PackageVulnerabilityMetadata>()
+                Vulnerabilities = new List<PackageVulnerabilityMetadata>()
                 {
                     new PackageVulnerabilityMetadata()
                     {
@@ -101,9 +101,7 @@ namespace NuGet.Test.Utility
                 throw new NotImplementedException();
             }
 
-            public IEnumerable<PackageVulnerabilityMetadata> VulnerabilityMetadata { get; internal set; }
-
-            public Task<IEnumerable<PackageVulnerabilityMetadata>> GetVulnerabilityMetadataAsync() => Task.FromResult(VulnerabilityMetadata);
+            public IEnumerable<PackageVulnerabilityMetadata> Vulnerabilities { get; internal set; }
         }
     }
 }

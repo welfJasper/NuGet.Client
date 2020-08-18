@@ -441,9 +441,9 @@ namespace NuGet.PackageManagement.UI
 
                     // vulnerability metadata
                     int newVulnerabilityMaxSeverity = -1;
-                    if (_packageMetadata?.VulnerabilityMetadata != null)
+                    if (_packageMetadata?.Vulnerabilities != null)
                     {
-                        newVulnerabilityMaxSeverity = _packageMetadata.VulnerabilityMetadata.Max(v => v.Severity);
+                        newVulnerabilityMaxSeverity = _packageMetadata.Vulnerabilities.Max(v => v.Severity);
                     }
 
                     PackageVulnerabilityMaxSeverity = newVulnerabilityMaxSeverity;
@@ -451,6 +451,7 @@ namespace NuGet.PackageManagement.UI
                     OnPropertyChanged(nameof(PackageMetadata));
                     OnPropertyChanged(nameof(IsPackageDeprecated));
                     OnPropertyChanged(nameof(IsPackageVulnerable));
+                    OnPropertyChanged(nameof(PackageVulnerabilityMaxSeverity));
                 }
             }
         }
@@ -545,7 +546,6 @@ namespace NuGet.PackageManagement.UI
                     v => v.versionInfo.Version,
                     v => new DetailedPackageMetadata(v.versionInfo.PackageSearchMetadata,
                         v.deprecationMetadata,
-                        v.vulnerabilityMetadata,
                         v.versionInfo.DownloadCount));
 
             // If we are missing any metadata, go to the metadata provider and fetch all of the data again.
@@ -564,8 +564,7 @@ namespace NuGet.PackageManagement.UI
                         packages.Select(async searchMetadata =>
                         {
                             var deprecationMetadata = await searchMetadata.GetDeprecationMetadataAsync();
-                            var vulnerabilityMetadata = await searchMetadata.GetVulnerabilityMetadataAsync();
-                            return (searchMetadata, deprecationMetadata, vulnerabilityMetadata);
+                            return (searchMetadata, deprecationMetadata);
                         }));
 
                     var uniquePackages = packagesWithExtendedMetadata
@@ -580,14 +579,13 @@ namespace NuGet.PackageManagement.UI
                             d => d.versionInfo.Version,
                             (m, d) =>
                             {
-                                var (versionInfo, deprecationMetadata, vulnerabilityMetadata) = d
+                                var (versionInfo, deprecationMetadata) = d
                                     .OrderByDescending(v => v.versionInfo.DownloadCount ?? 0)
                                     .FirstOrDefault();
 
                                 return new DetailedPackageMetadata(
                                     m.searchMetadata ?? versionInfo.PackageSearchMetadata,
                                     m.deprecationMetadata,
-                                    m.vulnerabilityMetadata,
                                     m.searchMetadata?.DownloadCount ?? versionInfo?.DownloadCount);
                             })
                          .ToDictionary(m => m.Version);
@@ -607,8 +605,7 @@ namespace NuGet.PackageManagement.UI
         }
 
         private async Task<IEnumerable<(VersionInfo versionInfo,
-            PackageDeprecationMetadata deprecationMetadata,
-            IEnumerable<PackageVulnerabilityMetadata> vulnerabilityMetadata)>> GetVersionsWithExtendedMetadataAsync()
+            PackageDeprecationMetadata deprecationMetadata)>> GetVersionsWithExtendedMetadataAsync()
         {
             var versions = await _searchResultPackage.GetVersionsAsync();
             return await Task.WhenAll(
@@ -617,11 +614,8 @@ namespace NuGet.PackageManagement.UI
                     var deprecationMetadata = version?.PackageSearchMetadata != null
                         ? await version.PackageSearchMetadata.GetDeprecationMetadataAsync()
                         : null;
-                    var vulnerabilityMetadata = version?.PackageSearchMetadata != null
-                        ? await version.PackageSearchMetadata.GetVulnerabilityMetadataAsync()
-                        : null;
 
-                    return (version, deprecationMetadata, vulnerabilityMetadata);
+                    return (version, deprecationMetadata);
                 }));
         }
 

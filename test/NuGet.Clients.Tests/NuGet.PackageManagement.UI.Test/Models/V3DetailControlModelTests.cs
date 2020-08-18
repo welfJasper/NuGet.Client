@@ -118,8 +118,7 @@ namespace NuGet.PackageManagement.UI.Test.Models
         public async void MaxVulnerabilitySeverityWhenMetadataHasVulnerability_Calculated()
         {
             await _testInstance.LoadPackageMetadataAsync(_metadataProvider, CancellationToken.None);
-            Assert.Equal(_testInstance.PackageVulnerabilityMaxSeverity,
-                (await _testData.TestData.GetVulnerabilityMetadataAsync()).Max(v => v.Severity));
+            Assert.Equal(_testInstance.PackageVulnerabilityMaxSeverity, _testData.TestData.Vulnerabilities.Max(v => v.Severity));
         }
     }
 

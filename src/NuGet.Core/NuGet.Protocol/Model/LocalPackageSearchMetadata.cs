@@ -118,7 +118,7 @@ namespace NuGet.Protocol
         /// <remarks>
         /// Vulnerability metadata is not stored within the package and requires an online package source.
         /// </remarks>
-        public Task<IEnumerable<PackageVulnerabilityMetadata>> GetVulnerabilityMetadataAsync() => Task.FromResult<IEnumerable<PackageVulnerabilityMetadata>>(null);
+        public IEnumerable<PackageVulnerabilityMetadata> Vulnerabilities => null;
 
         private const int FiveMegabytes = 5242880; // 1024 * 1024 * 5, 5MB
 
