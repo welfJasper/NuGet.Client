@@ -8,6 +8,7 @@ using NuGet.Packaging;
 using NuGet.Protocol;
 using NuGet.Protocol.Core.Types;
 using NuGet.Versioning;
+using NuGet.VisualStudio.Internal.Contracts;
 
 namespace NuGet.PackageManagement.UI
 {
@@ -17,7 +18,7 @@ namespace NuGet.PackageManagement.UI
         {
         }
 
-        public DetailedPackageMetadata(IPackageSearchMetadata serverData, PackageDeprecationMetadata deprecationMetadata, long? downloadCount)
+        public DetailedPackageMetadata(PackageSearchMetadataContextInfo serverData, PackageDeprecationMetadataContextInfo deprecationMetadata, long? downloadCount)
         {
             Id = serverData.Identity.Id;
             Version = serverData.Identity.Version;
@@ -48,7 +49,7 @@ namespace NuGet.PackageManagement.UI
             PrefixReserved = serverData.PrefixReserved;
             LicenseMetadata = serverData.LicenseMetadata;
             DeprecationMetadata = deprecationMetadata;
-            _localMetadata = serverData as LocalPackageSearchMetadata;
+            _localMetadata = null; //TODO: SCOBAN // serverData as LocalPackageSearchMetadata;
 
             // Determine the package details URL and text.
             PackageDetailsUrl = null;
@@ -108,7 +109,7 @@ namespace NuGet.PackageManagement.UI
 
         public LicenseMetadata LicenseMetadata { get; set; }
 
-        public PackageDeprecationMetadata DeprecationMetadata { get; set; }
+        public PackageDeprecationMetadataContextInfo DeprecationMetadata { get; set; }
 
         public IReadOnlyList<IText> LicenseLinks => PackageLicenseUtilities.GenerateLicenseLinks(this);
 
