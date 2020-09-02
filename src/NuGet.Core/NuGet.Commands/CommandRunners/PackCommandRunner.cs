@@ -796,7 +796,7 @@ namespace NuGet.Commands
                 }
                 else
                 {
-                    successful= BuildPackage(mainPackageBuilder, symbolsPackage: false);
+                    successful = BuildPackage(mainPackageBuilder, symbolsPackage: false);
                 }
 
                 // If we're excluding symbols then do nothing else
