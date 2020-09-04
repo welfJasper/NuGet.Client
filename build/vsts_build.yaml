@@ -188,6 +188,22 @@ jobs:
       optimizationInputsDropNamePrefix: OptimizationInputs/$(System.TeamProject)/$(Build.Repository.Name)
     condition: "and(succeeded(), eq(variables['BuildRTM'], 'false'), eq(variables['IsOfficialBuild'], 'true'))"
 
+  - task: PowerShell@1
+    displayName: "Restore dotnet tools"
+    inputs:
+      scriptType: "inlineScript"
+      inlineScript: |
+        dotnet tool restore
+    condition: "not(eq(variables['IsOfficialBuild'], 'true'))"
+
+  - task: PowerShell@1
+    displayName: "Check source file format"
+    inputs:
+      scriptType: "inlineScript"
+      inlineScript: |
+        dotnet format --check --exclude submodules --verbosity diagnostic
+    condition: "and(succeeded(), not(eq(variables['IsOfficialBuild'], 'true')))"
+
   - task: MSBuild@1
     displayName: "Restore for VS2019"
     inputs:
@@ -282,7 +298,7 @@ jobs:
   - task: PublishBuildArtifacts@1
     displayName: "Publish NuGet.CommandLine.Test as artifact"
     inputs:
-      PathtoPublish: "$(Build.Repository.LocalPath)\\test\\NuGet.Clients.Tests\\NuGet.CommandLine.Test\\bin\\$(BuildConfiguration)\\net472\\win7-x64"
+      PathtoPublish: "$(Build.Repository.LocalPath)\\test\\NuGet.Clients.Tests\\NuGet.CommandLine.Test\\bin\\$(BuildConfiguration)\\net472"
       ArtifactName: "NuGet.CommandLine.Test"
       ArtifactType: "Container"
     condition: "and(succeeded(),eq(variables['BuildRTM'], 'true'))"
